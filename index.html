@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMW España - Driving Experience</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&family=Playfair+Display:wght@700&display=swap');
+    :root {
+      --primary: #000;
+      --secondary: #fff;
+      --overlay: rgba(0,0,0,0.4);
+      --font-base: 'Roboto', sans-serif;
+      --font-title: 'Playfair Display', serif;
+      --transition: 0.3s ease;
+      --pink-light: #fdf1f1;
+      --pink-mid: #f6c8c7;
+      --pink-accent: #eebbbb;
+      --pink-dark: #c19090;
+      --white: #fff;
+      --dot-color: rgba(255,255,255,0.4);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin:0; padding:0; height:100%; font-family: var(--font-base); color: var(--pink-dark); }
+    /* Teaser Section */
+    #teaser {
+      position: relative;
+      height: 100vh;
+      background: url('https://www.bmw.es/content/dam/bmw/common/all-models/3-series/sedan/2021/bmw-3-series-sedan-mmp-01.jpg') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--secondary);
+    }
+    #teaser::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--overlay);
+      z-index: 1;
+    }
+    .nav {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      z-index: 2;
+    }
+    .nav img { height: 40px; }
+    .nav a { color: var(--secondary); text-decoration: none; margin-left: 30px; font-weight: 500; transition: opacity var(--transition); }
+    .nav a:hover { opacity: 0.7; }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 0 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    .hero-content h1 { font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .hero-content p { font-size: 1.25rem; font-weight: 300; margin-bottom: 1.5rem; line-height: 1.4; }
+    #start-btn {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: var(--secondary);
+      color: var(--primary);
+      text-transform: uppercase;
+      font-weight: 700;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+      z-index: 2;
+    }
+    #start-btn:hover { background: var(--primary); color: var(--secondary); }
+    .scroll-indicator {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      z-index: 2;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    /* Main Content */
+    #main-content {
+      display: none;
+      position: relative;
+      background: var(--pink-light);
+      padding: 40px 15px;
+      overflow: hidden;
+    }
+    #main-content::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 20%, var(--dot-color) 2%, transparent 3%),
+        radial-gradient(circle at 80% 80%, var(--dot-color) 2%, transparent 3%);
+      background-size: 80px 80px;
+      z-index: 0;
+    }
+    .mc-header { position: relative; text-align: center; padding-top: 100px; margin-bottom: 20px; z-index: 1; }
+    .mc-rose {
+      position: absolute;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 150px; height: 150px;
+      background: var(--white);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+    .mc-rose img { width: 90%; height: auto; border-radius: 50%; }
+    .mc-title { font-family: var(--font-title); font-size: 2.5rem; margin-top: 100px; z-index: 1; }
+    .content-body {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--white);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .content-body p { margin: 15px 0; line-height: 1.6; }
+    .carousel-container { position: relative; margin: 20px 0; z-index: 1; }
+    #carousel-caption-top { font-size: 1.25rem; font-weight: 500; margin-bottom: 10px; color: var(--pink-dark); }
+    .carousel-slide { display: none; }
+    .carousel-slide.active { display: block; }
+    .carousel-slide img { width: 100%; border-radius: 8px; }
+    .carousel-btn {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px;
+      background: var(--white);
+      border-radius: 50%; border: none;
+      font-size: 1.5rem; color: var(--pink-dark);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: background var(--transition), color var(--transition);
+      z-index: 2;
+    }
+    .carousel-btn:hover { background: var(--pink-mid); color: var(--white); }
+    .carousel-btn.prev { left: 10px; }
+    .carousel-btn.next { right: 10px; }
+    .carousel-date { margin: 10px 0; font-size: 0.9rem; color: var(--pink-accent); z-index: 1; }
+    .btn-claim {
+      display: none;
+      margin: 20px auto 0;
+      background: var(--pink-dark);
+      color: var(--white);
+      padding: 0.75rem 1.5rem;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      text-transform: uppercase;
+      width: fit-content;
+      z-index: 1;
+      transition: background var(--transition);
+    }
+    .btn-claim:hover { background: var(--pink-accent); }
+    @media (max-width: 768px) {
+      .hero-content h1 { font-size: 2.25rem; }
+      .hero-content p { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Teaser Profesional -->
+  <section id="teaser">
+    <nav class="nav">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo">
+      <div>
+        <a href="#">Modelos</a><a href="#">Experiencia</a><a href="#">Contacto</a>
+      </div>
+    </nav>
+    <div class="hero-content">
+      <h1>The Ultimate Driving Experience</h1>
+      <p>Descubre la perfección en cada curva y la pasión en cada detalle.</p>
+      <button id="start-btn">Explore</button>
+    </div>
+    <div class="scroll-indicator">Scroll para más detalles</div>
+  </section>
+
+  <!-- Contenido real -->
+  <section id="main-content">
+    <div class="mc-header">
+      <div class="mc-rose">
+        <img src="https://i.pinimg.com/736x/62/6d/32/626d328d3681c8209c76d4863e933c22.jpg" alt="Rosa roja">
+      </div>
+      <h2 class="mc-title">Feliz Saint Jordi</h2>
+    </div>
+    <div class="content-body">
+      <!-- Top caption -->
+      <div id="carousel-caption-top"></div>
+      <div class="carousel-container">
+        <div class="carousel-slide active"><img src="https://i.imgur.com/IrOC6zc.jpeg" alt="Recuerdo 1"></div>
+        <div class="carousel-slide"><img src= "https://i.imgur.com/dWp6f8m.jpeg"alt="Recuerdo 2"></div>
+        <div class="carousel-slide"><img src="https://m.media-amazon.com/images/I/71lw5JNU2xL._SL1499_.jpg" alt="Portada del libro"></div>
+        <button class="carousel-btn prev">‹</button>
+        <button class="carousel-btn next">›</button>
+      </div>
+      <div class="carousel-date">23.04.25</div>
+      <a href="https://www.amazon.es/kindle/redeem/?t=GSSDBDHGYYH4WE8" class="btn-claim">Canjear Kindle</a>
+    </div>
+  </section>
+  <script>
+    document.getElementById('start-btn').addEventListener('click', () => {
+      document.getElementById('teaser').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+    });
+    const slides = document.querySelectorAll('.carousel-slide');
+    const btnNext = document.querySelector('.carousel-btn.next');
+    const btnPrev = document.querySelector('.carousel-btn.prev');
+    const btnClaim = document.querySelector('.btn-claim');
+    const captionTop = document.getElementById('carousel-caption-top');
+    const captions = [
+      'Es un poco ñosa, pero asi no se ponia mala hasta que pudiese dartela :p',
+      'Ademas mira que tonta Nuca con ella',
+      'Se que no estas en una epoca muy lectora y que puedes piratear los libros en el kindle, pero queria que tuvieses un detalle... (dale al boton debajo de la imagen)'
+    ];
+    let current = 0;
+    function updateCarousel() {
+      slides.forEach((s,i) => s.classList.toggle('active', i===current));
+      captionTop.textContent = captions[current];
+      btnClaim.style.display = current === slides.length - 1 ? 'block' : 'none';
+    }
+    btnNext.addEventListener('click', () => { current = (current + 1) % slides.length; updateCarousel(); });
+    btnPrev.addEventListener('click', () => { current = (current - 1 + slides.length) % slides.length; updateCarousel(); });
+    updateCarousel();
+  </script>
+</body>
+</html>
+
